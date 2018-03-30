@@ -14,6 +14,12 @@
     <string name="gender">gender</string>
     <string name="allow_notifications">Allow Notifications</string>
     <string name="birth_date">Birth date</string>
+    <string name="my_chat_list">My chat list</string>
+    <string name="first_letter">K</string>
+    <string name="name_example">Pera Peric</string>
+    <string name="savo_dragovic">Savo Dragovic</string>
+    <string name="srdjan_usorac">Srdjan Usorac</string>
+    <string name="marko_markovic">Marko Markovic</string>
     <string-array name="spinner">
         <item>male</item>
         <item>female</item>

@@ -7,36 +7,48 @@
     android:orientation="vertical"
     tools:context="srdjan.usorac.chatapplication.ContactsActivity">
 
-    <Button
-        android:id="@+id/logout"
-        android:layout_width="139dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:text="@string/log_out" />
-
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="84dp"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:layout_width="99dp"
-            android:layout_height="match_parent"
-            android:layout_marginRight="10dp"
-            app:srcCompat="@mipmap/ic_launcher" />
 
         <TextView
-            android:id="@+id/my_friend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/my_friend"
-            android:textSize="25sp"
-            android:textStyle="bold"
-            android:onClick="onClick"
-            android:clickable="true"/>
+            android:text = "@string/my_chat_list"
+            android:textSize="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"/>
 
 
-    </LinearLayout>
+        <Button
+            android:id="@+id/logout"
+            android:layout_width="139dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="@string/log_out"
+            android:layout_alignParentRight="true" />
+
+
+    </RelativeLayout>
+
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+
+        <ListView
+            android:id="@+id/contacts_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+        </ListView>
+
+
+
+    </RelativeLayout>
 
 </LinearLayout>
