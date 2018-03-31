@@ -63,6 +63,11 @@ public class CharacterAdapter extends BaseAdapter {
             holder.first_letter = (TextView) view.findViewById(R.id.first_letter);
 
             holder.first_letter.setBackgroundColor(Color.rgb((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255)));
+
+            holder.image.requestLayout();
+            holder.image.getLayoutParams().width = 100;
+            holder.image.getLayoutParams().height = 100;
+
             view.setTag(holder);
         }
 

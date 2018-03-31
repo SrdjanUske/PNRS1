@@ -1,6 +1,7 @@
 package srdjan.usorac.chatapplication;
 
 import android.graphics.drawable.Drawable;
+import android.widget.ImageView;
 
 public class Custom {
 
