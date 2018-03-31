@@ -30,7 +30,8 @@
         app:srcCompat="@android:drawable/ic_media_play"
         android:layout_alignParentRight="true"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="7dp"
+
         android:background="@color/buttonBackground"/>
 
 
