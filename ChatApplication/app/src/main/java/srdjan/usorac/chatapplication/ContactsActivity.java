@@ -29,31 +29,31 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
 
         adapter.addCharacter(new Custom((Character)getString(R.string.jovana_milosevic).charAt(0),
                                         getString(R.string.jovana_milosevic),
-                                        getResources().getDrawable(R.drawable.ic_launcher_background)));
+                                        getResources().getDrawable(R.drawable.new_messages_red)));
         adapter.addCharacter(new Custom((Character)getString(R.string.marko_markovic).charAt(0),
                                         getString(R.string.marko_markovic),
-                                        getResources().getDrawable(R.drawable.ic_launcher_background)));
+                                        getResources().getDrawable(R.drawable.new_messages_red)));
         adapter.addCharacter(new Custom((Character)getString(R.string.srdjan_usorac).charAt(0),
                                         getString(R.string.srdjan_usorac),
-                                        getResources().getDrawable(R.drawable.ic_launcher_background)));
+                                        getResources().getDrawable(R.drawable.new_messages_red)));
         adapter.addCharacter(new Custom((Character)getString(R.string.igor_ilic).charAt(0),
                                         getString(R.string.igor_ilic),
-                                        getResources().getDrawable(R.drawable.ic_launcher_background)));
+                                        getResources().getDrawable(R.drawable.new_messages_red)));
         adapter.addCharacter(new Custom((Character)getString(R.string.savo_dragovic).charAt(0),
                                         getString(R.string.savo_dragovic),
-                                        getResources().getDrawable(R.drawable.ic_launcher_background)));
+                                        getResources().getDrawable(R.drawable.new_messages_red)));
         adapter.addCharacter(new Custom((Character)getString(R.string.moja_mama).charAt(0),
                                         getString(R.string.moja_mama),
-                                        getResources().getDrawable(R.drawable.ic_launcher_background)));
+                                        getResources().getDrawable(R.drawable.new_messages_red)));
         adapter.addCharacter(new Custom((Character)getString(R.string.ruzica_mitric).charAt(0),
                                         getString(R.string.ruzica_mitric),
-                                        getResources().getDrawable(R.drawable.ic_launcher_background)));
+                                        getResources().getDrawable(R.drawable.new_messages_red)));
         adapter.addCharacter(new Custom((Character)getString(R.string.nikola_percevic).charAt(0),
                                         getString(R.string.nikola_percevic),
-                                        getResources().getDrawable(R.drawable.ic_launcher_background)));
+                                        getResources().getDrawable(R.drawable.new_messages_red)));
         adapter.addCharacter(new Custom((Character)getString(R.string.vladimir_spasojevic).charAt(0),
                                         getString(R.string.vladimir_spasojevic),
-                                        getResources().getDrawable(R.drawable.ic_launcher_background)));
+                                        getResources().getDrawable(R.drawable.new_messages_red)));
 
         ListView list = (ListView) findViewById(R.id.contacts_list);
         list.setAdapter(adapter);

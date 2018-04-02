@@ -5,4 +5,6 @@
     <color name="colorAccent">#FF4081</color>
     <color name="white">#FFFFFF</color>
     <color name="buttonBackground">#C0DA4F</color>
+    <color name="chat0">#FFFFFF</color>
+    <color name="chat1">#808080</color>
 </resources>

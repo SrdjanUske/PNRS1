@@ -1,9 +1,12 @@
 package srdjan.usorac.chatapplication;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +19,6 @@ public class CharacterAdapter extends BaseAdapter implements View.OnClickListene
 
     private Context mContext;
     private ArrayList<Custom> mCharacters;
-    TextView message;
 
     public CharacterAdapter(Context mContext) {
         this.mContext = mContext;
@@ -62,7 +64,6 @@ public class CharacterAdapter extends BaseAdapter implements View.OnClickListene
             ViewHolder holder = new ViewHolder();
             holder.image = (ImageView) view.findViewById(R.id.imageView);
             holder.name = (TextView) view.findViewById(R.id.contact_name);
-            message = (TextView) view.findViewById(R.id.contact_name);
             holder.first_letter = (TextView) view.findViewById(R.id.first_letter);
 
             holder.first_letter.setBackgroundColor(Color.rgb((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255)));
@@ -70,8 +71,8 @@ public class CharacterAdapter extends BaseAdapter implements View.OnClickListene
             holder.image.requestLayout();
             holder.image.getLayoutParams().width = 100;
             holder.image.getLayoutParams().height = 100;
-
             holder.image.setOnClickListener(this);
+            holder.image.setTag(i);
 
             view.setTag(holder);
         }
@@ -82,19 +83,21 @@ public class CharacterAdapter extends BaseAdapter implements View.OnClickListene
         holder.name.setText(String.valueOf(character.getName()));
         holder.first_letter.setText(String.valueOf(character.getFirst_letter()));
 
-
         return view;
     }
 
     @Override
     public void onClick(View v) {
 
-        Intent intent;
-
         if (v.getId() == R.id.imageView) {
-            intent = new Intent(mContext, MessageActivity.class);
-            intent.setAction(Intent.ACTION_SEND);
-            intent.putExtra(Intent.EXTRA_TEXT, message.getText());
+
+            int k = Integer.parseInt(v.getTag().toString());
+            Custom contact = mCharacters.get(k);
+
+            Intent intent = new Intent(mContext.getApplicationContext(), MessageActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("contact_name", contact.getName().toString());
+            intent.putExtras(bundle);
             mContext.startActivity(intent);
         }
     }
