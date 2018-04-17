@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">DatabaseExample</string>
+
+    <string name="add_student">Add Student</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="index_number">Index Number</string>
+
+</resources>
