@@ -14,6 +14,18 @@
     <string name="gender">gender</string>
     <string name="allow_notifications">Allow Notifications</string>
     <string name="birth_date">Birth date</string>
+    <string name="my_chat_list">My chat list</string>
+    <string name="first_letter">K</string>
+    <string name="name_example">Pera Peric</string>
+    <string name="savo_dragovic">Savo Dragovic</string>
+    <string name="srdjan_usorac">Srdjan Usorac</string>
+    <string name="marko_markovic">Marko Markovic</string>
+    <string name="jovana_milosevic">Jovana Milosevic</string>
+    <string name="igor_ilic">Igor Ilic</string>
+    <string name="moja_mama">Moja Mama</string>
+    <string name="nikola_percevic">Nikola Percevic</string>
+    <string name="vladimir_spasojevic">Vladimir Spasojevic</string>
+    <string name="ruzica_mitric">Ruzica Mitric</string>
     <string-array name="spinner">
         <item>male</item>
         <item>female</item>
