@@ -26,6 +26,7 @@
     <string name="nikola_percevic">Nikola Percevic</string>
     <string name="vladimir_spasojevic">Vladimir Spasojevic</string>
     <string name="ruzica_mitric">Ruzica Mitric</string>
+    <string name="contact_list">contact_list</string>
     <string-array name="spinner">
         <item>male</item>
         <item>female</item>

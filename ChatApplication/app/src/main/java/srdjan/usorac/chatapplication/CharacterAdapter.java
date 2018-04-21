@@ -30,6 +30,16 @@ public class CharacterAdapter extends BaseAdapter implements View.OnClickListene
         notifyDataSetChanged();
     }
 
+    public void update(Custom[] contacts) {
+        mCharacters.clear();
+        if(contacts != null) {
+            for(Custom contact : contacts) {
+                mCharacters.add(contact);
+            }
+        }
+
+        notifyDataSetChanged();
+    }
 
     @Override
     public int getCount() {

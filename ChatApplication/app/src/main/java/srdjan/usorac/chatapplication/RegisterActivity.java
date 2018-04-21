@@ -17,9 +17,11 @@ import java.util.Date;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, View.OnFocusChangeListener, TextWatcher {
 
-    Button register_now;
-    EditText username,password,email;
-    DatePicker date_picker;
+    private Button register_now;
+    private EditText username, password, email, firstName, lastName;
+    private DatePicker date_picker;
+    private DbHelper mDbHelper;
+    private Contact contact;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,20 +34,27 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         username = (EditText) findViewById(R.id.username_reg);
         password = (EditText) findViewById(R.id.password_reg);
+        firstName = (EditText) findViewById(R.id.first_name);
+        lastName = (EditText) findViewById(R.id.last_name);
         email = (EditText) findViewById(R.id.email_reg);
 
         username.setOnFocusChangeListener(this);
         password.setOnFocusChangeListener(this);
+        firstName.setOnFocusChangeListener(this);
+        lastName.setOnFocusChangeListener(this);
         email.setOnFocusChangeListener(this);
 
         username.addTextChangedListener(this);
         password.addTextChangedListener(this);
+        firstName.addTextChangedListener(this);
+        lastName.addTextChangedListener(this);
         email.addTextChangedListener(this);
 
         date_picker = (DatePicker) findViewById(R.id.date_picker);
         Date time = Calendar.getInstance().getTime();
         date_picker.setMaxDate(time.getTime());
 
+        mDbHelper = new DbHelper(this);
     }
 
     @Override
@@ -59,19 +68,19 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onFocusChange(View view, boolean b) {
         if (username.getText().toString().length() == 0){
-
-            username.setError("Mandatory field");
-
+            username.setError("Mandatory field !!!");
         }
         if (password.getText().toString().length() == 0){
-
-            password.setError("Mandatory (min 6 characters)");
-
+            password.setError("Mandatory (min 6 characters) !!!");
         }
         if (email.getText().toString().length() == 0){
-
-            email.setError("Mandatory field");
-
+            email.setError("Mandatory field !!!");
+        }
+        if (firstName.getText().toString().length() == 0){
+            firstName.setError("Mandatory field !!!");
+        }
+        if (lastName.getText().toString().length() == 0){
+            lastName.setError("Mandatory field !!!");
         }
 
     }
@@ -95,9 +104,23 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         if (username.getText().toString().length() > 0){
             if (password.getText().toString().length() >= 6) {
                 if (mail.length() !=0 && Patterns.EMAIL_ADDRESS.matcher(mail).matches()) {
+                    if (firstName.getText().toString().length() > 0) {
+                        if (lastName.getText().toString().length() > 0) {
 
-                    register_now.setEnabled(true);
+                            contact = new Contact(username.getText().toString(),
+                                                  firstName.getText().toString(),
+                                                  lastName.getText().toString());
+                            mDbHelper.insertContact(contact);
+                            register_now.setEnabled(true);
 
+                        }
+                        else {
+                            register_now.setEnabled(false);
+                        }
+                    }
+                    else {
+                        register_now.setEnabled(false);
+                    }
                 }
                 else {
                     register_now.setEnabled(false);

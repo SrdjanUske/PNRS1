@@ -12,8 +12,10 @@ import android.widget.TextView;
 
 public class ContactsActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Button logout;
-    ImageView chat;
+    private Button logout;
+    private ImageView chat;
+    private DbHelper mDbHelper;
+    private CharacterAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,9 +27,9 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
 
         chat = findViewById(R.id.imageView);
 
-        CharacterAdapter adapter = new CharacterAdapter(this);
+        adapter = new CharacterAdapter(this);
 
-        adapter.addCharacter(new Custom((Character)getString(R.string.jovana_milosevic).charAt(0),
+        /*adapter.addCharacter(new Custom((Character)getString(R.string.jovana_milosevic).charAt(0),
                                         getString(R.string.jovana_milosevic),
                                         getResources().getDrawable(R.drawable.new_messages_red)));
         adapter.addCharacter(new Custom((Character)getString(R.string.marko_markovic).charAt(0),
@@ -54,11 +56,45 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
         adapter.addCharacter(new Custom((Character)getString(R.string.vladimir_spasojevic).charAt(0),
                                         getString(R.string.vladimir_spasojevic),
                                         getResources().getDrawable(R.drawable.new_messages_red)));
-
+*/
         ListView list = (ListView) findViewById(R.id.contacts_list);
         list.setAdapter(adapter);
 
+        mDbHelper = new DbHelper(this);
+
+        Contact[] contacts = mDbHelper.readContacts();
+        Custom[] custom = new Custom[contacts.length];
+
+        for (int i = 0; i < custom.length; i++) {
+            custom[i].setImage(
+                    getResources().getDrawable(R.drawable.new_messages_red));
+            custom[i].setName(
+                    contacts[i].getFirstName() + " " + contacts[i].getLastName());
+            custom[i].setFirst_letter(
+                    custom[i].getName().charAt(0));
+        }
+
+        adapter.update(custom);
     }
+
+    /*@Override
+    protected void onResume() {
+        super.onResume();
+
+        Contact[] contacts = mDbHelper.readContacts();
+        Custom[] custom = new Custom[contacts.length]
+
+        for (int i = 0; i < custom.length; i++) {
+            custom[i].setImage(
+                    getResources().getDrawable(R.drawable.new_messages_red));
+            custom[i].setName(
+                    contacts[i].getFirstName() + " " + contacts[i].getLastName());
+            custom[i].setFirst_letter(
+                    custom[i].getName().charAt(0));
+        }
+
+        adapter.update(custom);
+    }*/
 
     @Override
     public void onClick(View view) {
