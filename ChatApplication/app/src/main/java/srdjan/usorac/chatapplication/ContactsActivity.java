@@ -1,6 +1,7 @@
 package srdjan.usorac.chatapplication;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,13 +10,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ContactsActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button logout;
     private ImageView chat;
-    private DbHelper mDbHelper;
     private CharacterAdapter adapter;
+    SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,21 +62,29 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
         ListView list = (ListView) findViewById(R.id.contacts_list);
         list.setAdapter(adapter);
 
-        mDbHelper = new DbHelper(this);
+        Bundle bundle = getIntent().getExtras();
+        String username = bundle.getString("UserName");
 
+        DbHelper mDbHelper = DbHelper.getInstance(this);
         Contact[] contacts = mDbHelper.readContacts();
-        Custom[] custom = new Custom[contacts.length];
 
-        for (int i = 0; i < custom.length; i++) {
-            custom[i].setImage(
-                    getResources().getDrawable(R.drawable.new_messages_red));
-            custom[i].setName(
-                    contacts[i].getFirstName() + " " + contacts[i].getLastName());
-            custom[i].setFirst_letter(
-                    custom[i].getName().charAt(0));
+        if (contacts == null) {
+            Toast.makeText(getApplicationContext(), "No contacts!", Toast.LENGTH_SHORT).show();
         }
+        else {
 
-        adapter.update(custom);
+            for (Contact contact : contacts) {
+                if (!(contact.getUserName().equals(username))) {
+                    /*preferences = getApplicationContext().getSharedPreferences("MyPreferences", 0);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putInt(contact.);*/
+
+                    adapter.addCharacter(new Custom(contact.getFirstName().charAt(0),
+                            contact.getFirstName() + " " + contact.getLastName(),
+                            getResources().getDrawable(R.drawable.new_messages_red)));
+                }
+            }
+        }
     }
 
     /*@Override
@@ -105,5 +115,11 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
             intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
     }
 }

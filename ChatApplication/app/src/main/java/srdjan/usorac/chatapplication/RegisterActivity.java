@@ -12,6 +12,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -54,13 +55,19 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         Date time = Calendar.getInstance().getTime();
         date_picker.setMaxDate(time.getTime());
 
-        mDbHelper = new DbHelper(this);
+        mDbHelper = DbHelper.getInstance(this);
     }
 
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.register_register) {
-            Intent intent = new Intent(this, ContactsActivity.class);
+
+            contact = new Contact(0, username.getText().toString(),
+                    firstName.getText().toString(),
+                    lastName.getText().toString());
+            mDbHelper.insertContact(contact);
+
+            Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
     }
@@ -106,13 +113,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 if (mail.length() !=0 && Patterns.EMAIL_ADDRESS.matcher(mail).matches()) {
                     if (firstName.getText().toString().length() > 0) {
                         if (lastName.getText().toString().length() > 0) {
-
-                            contact = new Contact(username.getText().toString(),
-                                                  firstName.getText().toString(),
-                                                  lastName.getText().toString());
-                            mDbHelper.insertContact(contact);
                             register_now.setEnabled(true);
-
                         }
                         else {
                             register_now.setEnabled(false);

@@ -1,6 +1,8 @@
 package srdjan.usorac.chatapplication;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -8,11 +10,15 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class  MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnFocusChangeListener, TextWatcher {
 
     Button login_button, register_button;
     EditText username, password;
+    private DbHelper mDbHelper;
+    private Contact[] contacts;
+    SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +38,17 @@ public class  MainActivity extends AppCompatActivity implements View.OnClickList
         username.addTextChangedListener(this);
         password.addTextChangedListener(this);
 
+        mDbHelper = DbHelper.getInstance(this);
+        contacts = mDbHelper.readContacts();
+
+        // ako hocu da resetujem bazu
+        /*if (contacts.length != 0) {
+            int i = 0;
+            for (Contact contact : contacts) {
+                mDbHelper.deleteContact(++i);
+            }
+        }*/
+
     }
 
 
@@ -43,8 +60,25 @@ public class  MainActivity extends AppCompatActivity implements View.OnClickList
             startActivity(intent);
         }
         else if (view.getId() == R.id.login) {
-            Intent intent = new Intent(this, ContactsActivity.class);
-            startActivity(intent);
+            boolean exist = false;
+            for (int i = 0; i < contacts.length; i++) {
+                if (contacts[i].getUserName().equals(username.getText().toString())) {
+                    exist = true;
+
+                    preferences = getApplicationContext().getSharedPreferences("MyPreferences", 0);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putInt("sender" + (i + 1), i + 1);
+                    editor.commit();
+
+                    Intent intent = new Intent(this, ContactsActivity.class);
+                    intent.putExtra("UserName", contacts[i].getUserName());
+                    startActivity(intent);
+                }
+            }
+            if (!exist) {
+                Toast.makeText(getApplicationContext(), "Username not recognized!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "If you're not register, click REGISTER button!", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
