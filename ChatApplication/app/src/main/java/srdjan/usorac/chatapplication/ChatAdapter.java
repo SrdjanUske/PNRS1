@@ -1,6 +1,7 @@
 package srdjan.usorac.chatapplication;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,14 +16,15 @@ import java.util.ArrayList;
 public class ChatAdapter extends BaseAdapter implements View.OnLongClickListener {
 
     private Context mContext;
-    private ArrayList<String> chatList;
+    private ArrayList<Chat> chatList;
+    private DbHelper mDbHelper;
 
     public ChatAdapter(Context context) {
         this.mContext = context;
-        this.chatList = new ArrayList<String>();
+        this.chatList = new ArrayList<Chat>();
     }
 
-    public void addMessage(String message) {
+    public void addMessage(Chat message) {
         chatList.add(message);
     }
 
@@ -56,18 +58,24 @@ public class ChatAdapter extends BaseAdapter implements View.OnLongClickListener
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.message_box, null);
+
             ViewHolder holder = new ViewHolder();
             holder.box = convertView.findViewById(R.id.message_box);
+            holder.box.setTag(position);
 
             convertView.setTag(holder);
 
         }
 
-        ViewHolder holder = (ViewHolder) convertView.getTag();
-        holder.box.setTag(position);
-        holder.box.setText(String.valueOf(getItem(position)));
+        SharedPreferences preferences = mContext.getApplicationContext().getSharedPreferences("MyPreferences", 0);
+        int senderID = preferences.getInt("senderID", -1);
 
-        if (position % 2 == 0) {
+        Chat chat = (Chat) getItem(position);
+        ViewHolder holder = (ViewHolder) convertView.getTag();
+
+        holder.box.setText(chat.getmMessage());
+
+        if (chat.getmSender().getmID() == senderID) {
             convertView.setBackgroundColor(convertView.getResources().getColor(R.color.chat0));
             holder.box.setPadding(400, 0, 20, 0);
         }
@@ -85,8 +93,15 @@ public class ChatAdapter extends BaseAdapter implements View.OnLongClickListener
     @Override
     public boolean onLongClick(View v) {
         if (v.getId() == R.id.message_box) {
+
             int i = Integer.parseInt(v.getTag().toString());
+
+            mDbHelper = DbHelper.getInstance(mContext.getApplicationContext());
+            Chat chat = mDbHelper.getMessage(i);
+
+            mDbHelper.deleteMessage(chat.getId());
             chatList.remove(i);
+
             notifyDataSetChanged();
             return true;
         }

@@ -18,21 +18,21 @@ import java.util.ArrayList;
 public class CharacterAdapter extends BaseAdapter implements View.OnClickListener {
 
     private Context mContext;
-    private ArrayList<Custom> mCharacters;
+    private ArrayList<Contact> mContacts;
 
     public CharacterAdapter(Context mContext) {
         this.mContext = mContext;
-        mCharacters = new ArrayList<Custom>();
+        mContacts = new ArrayList<Contact>();
     }
 
-    public void addCharacter(Custom character) {
-        mCharacters.add(character);
+    public void addCharacter(Contact character) {
+        mContacts.add(character);
         notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        return mCharacters.size();
+        return mContacts.size();
     }
 
     @Override
@@ -40,7 +40,7 @@ public class CharacterAdapter extends BaseAdapter implements View.OnClickListene
         Object rv = null;
 
         try {
-            rv = mCharacters.get(i);
+            rv = mContacts.get(i);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -77,12 +77,11 @@ public class CharacterAdapter extends BaseAdapter implements View.OnClickListene
             view.setTag(holder);
         }
 
-        Custom character = (Custom) getItem(i);
+        Contact contact = (Contact) getItem(i);
         ViewHolder holder = (ViewHolder) view.getTag();
 
-        holder.image.setImageDrawable(character.getImage());
-        holder.name.setText(String.valueOf(character.getName()));
-        holder.first_letter.setText(String.valueOf(character.getFirst_letter()));
+        holder.name.setText(String.valueOf(contact.getFirstName() + " " + contact.getLastName()));
+        holder.first_letter.setText(String.valueOf(contact.getFirstName().toUpperCase().charAt(0)));
 
         return view;
     }
@@ -93,11 +92,14 @@ public class CharacterAdapter extends BaseAdapter implements View.OnClickListene
         if (v.getId() == R.id.imageView) {
 
             int k = Integer.parseInt(v.getTag().toString());
-            Custom contact = mCharacters.get(k);
+            Contact contact = mContacts.get(k);
 
             Intent intent = new Intent(mContext.getApplicationContext(), MessageActivity.class);
+
             Bundle bundle = new Bundle();
-            bundle.putString("contact_name", contact.getName().toString());
+            bundle.putString("contact_name", contact.getFirstName() + " " + contact.getLastName());
+            bundle.putInt("receiverID", contact.getmID());
+
             intent.putExtras(bundle);
             mContext.startActivity(intent);
         }

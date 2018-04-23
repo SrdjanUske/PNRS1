@@ -1,6 +1,7 @@
 package srdjan.usorac.chatapplication;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -17,12 +18,15 @@ import android.widget.Toast;
 
 public class MessageActivity extends AppCompatActivity implements View.OnClickListener, TextWatcher {
 
+    private int sender_id, receiver_id;
+    SharedPreferences preferences;
     Button logout, send;
     EditText message;
     Bundle chat_contact;
     TextView name;
     ListView list;
     ChatAdapter chat_list;
+    DbHelper mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,12 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         name = (TextView) findViewById(R.id.message_contact);
         name.setText(String.valueOf(chat_contact.getString("contact_name")));
 
+        preferences = getApplicationContext().getSharedPreferences("MyPreferences", 0);
+        sender_id = preferences.getInt("senderID", -1);
+        receiver_id = chat_contact.getInt("receiverID");
+
+        mDbHelper = DbHelper.getInstance(this);
+
         logout = findViewById(R.id.logout_from_chat);
         logout.setOnClickListener(this);
 
@@ -40,12 +50,34 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         chat_list = new ChatAdapter(this);
         list.setAdapter(chat_list);
 
+        // initializing
+        Chat[] chats = mDbHelper.readMessages(sender_id, receiver_id);
+
+        if (chats != null) {
+            for (Chat chat : chats) {
+                chat_list.addMessage(chat);
+            }
+        }
+
         send = findViewById(R.id.send);
         send.setEnabled(false);
         send.setOnClickListener(this);
 
         message = findViewById(R.id.message);
         message.addTextChangedListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Chat[] chats = mDbHelper.readMessages(sender_id, receiver_id);
+
+        if (chats != null) {
+            for (Chat chat : chats) {
+                mDbHelper.insertMessage(chat);
+            }
+        }
     }
 
     @Override
@@ -57,9 +89,16 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
             startActivity(intent);
         }
         else if(view.getId() == R.id.send){
-            String item = message.getText().toString();
-            chat_list.addMessage(item);
+
+            Contact sender = mDbHelper.getContact(sender_id);
+            Contact receiver = mDbHelper.getContact(receiver_id);
+
+            Chat chat = new Chat(0, sender, receiver, message.getText().toString());
+            mDbHelper.insertMessage(chat);
+
+            chat_list.addMessage(chat);
             chat_list.notifyDataSetChanged();
+
             Toast.makeText(getApplicationContext(), "Message is sent", Toast.LENGTH_SHORT).show();
             message.setText("");
 

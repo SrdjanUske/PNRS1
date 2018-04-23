@@ -51,8 +51,6 @@ public class  MainActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-
-
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.register) {
@@ -61,23 +59,32 @@ public class  MainActivity extends AppCompatActivity implements View.OnClickList
         }
         else if (view.getId() == R.id.login) {
             boolean exist = false;
-            for (int i = 0; i < contacts.length; i++) {
-                if (contacts[i].getUserName().equals(username.getText().toString())) {
-                    exist = true;
 
-                    preferences = getApplicationContext().getSharedPreferences("MyPreferences", 0);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putInt("sender" + (i + 1), i + 1);
-                    editor.commit();
+            if (contacts == null) {
 
-                    Intent intent = new Intent(this, ContactsActivity.class);
-                    intent.putExtra("UserName", contacts[i].getUserName());
-                    startActivity(intent);
-                }
-            }
-            if (!exist) {
                 Toast.makeText(getApplicationContext(), "Username not recognized!", Toast.LENGTH_SHORT).show();
                 Toast.makeText(getApplicationContext(), "If you're not register, click REGISTER button!", Toast.LENGTH_SHORT).show();
+
+            } else {
+
+                for (int i = 0; i < contacts.length; i++) {
+                    if (contacts[i].getUserName().equals(username.getText().toString())) {
+                        exist = true;
+
+                        preferences = getApplicationContext().getSharedPreferences("MyPreferences", 0);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putInt("sender" + (i + 1), i + 1);
+                        editor.commit();
+
+                        Intent intent = new Intent(this, ContactsActivity.class);
+                        intent.putExtra("UserName", contacts[i].getUserName());
+                        startActivity(intent);
+                    }
+                }
+                if (!exist) {
+                    Toast.makeText(getApplicationContext(), "Username not recognized!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "If you're not register, click REGISTER button!", Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }

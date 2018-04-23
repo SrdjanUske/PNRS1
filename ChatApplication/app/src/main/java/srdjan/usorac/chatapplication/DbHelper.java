@@ -50,7 +50,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 MESSAGE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 SENDER_ID + " INTEGER, " +
                 RECEIVER_ID + " INTEGER, " +
-                COLUMN_MESSAGE + " TEXT)," +
+                COLUMN_MESSAGE + " TEXT," +
                 " FOREIGN KEY (" + SENDER_ID + ") REFERENCES " + DbHelper.TABLE_NAME + "(" + DbHelper.CONTACT_ID + ")," +
                 " FOREIGN KEY (" + RECEIVER_ID + ") REFERENCES " + DbHelper.TABLE_NAME + "(" + DbHelper.CONTACT_ID + ")" +
                 ");" );
@@ -85,6 +85,25 @@ public class DbHelper extends SQLiteOpenHelper {
         close();
     }
 
+    public Contact getContact(String username) {
+        SQLiteDatabase db = instance.getReadableDatabase();
+
+        Cursor cursor = db.query(DbHelper.TABLE_NAME, null,
+                DbHelper.COLUMN_USER_NAME + "=?", new String[] {username},
+                null, null, null);
+
+        if (cursor.getCount() <= 0) {
+            return null;
+        }
+
+        cursor.moveToFirst();
+        Contact contact = createContact(cursor);
+
+        db.close();
+
+        return contact;
+    }
+
     public Contact getContact(int id) {
         SQLiteDatabase db = instance.getReadableDatabase();
 
@@ -106,7 +125,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public Contact[] readContacts() {
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, null, null);
+        Cursor cursor = db.query(DbHelper.TABLE_NAME, null, null, null, null, null, null, null);
 
         if (cursor.getCount() <= 0) {
             return null;
@@ -124,7 +143,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public void deleteContact(int id) {
         SQLiteDatabase db = getWritableDatabase();
-        db.delete(TABLE_NAME, CONTACT_ID + "=?", new String[] {String.valueOf(id)});
+        db.delete(DbHelper.TABLE_NAME, DbHelper.CONTACT_ID + "=?", new String[] {String.valueOf(id)});
         close();
     }
 
@@ -157,9 +176,34 @@ public class DbHelper extends SQLiteOpenHelper {
         close();
     }
 
-    public Chat[] readChats() {
+    public Chat getMessage(int id) {
+        SQLiteDatabase db = instance.getReadableDatabase();
+
+        Cursor cursor = db.query(DbHelper.CHAT_TABLE_NAME, null,
+                DbHelper.MESSAGE_ID + "=?", new String[] {Integer.toString(id)},
+                null, null, null);
+
+        if (cursor.getCount() <= 0) {
+            return null;
+        }
+
+        cursor.moveToFirst();
+        Chat chat = createMessage(cursor);
+
+        db.close();
+
+        return chat;
+    }
+
+    public Chat[] readMessages(int ID1, int ID2) {
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.query(CHAT_TABLE_NAME, null, null, null, null, null, null, null);
+
+        Cursor cursor = db.query(DbHelper.CHAT_TABLE_NAME, null,
+                "(" + DbHelper.SENDER_ID + "=? AND " + DbHelper.RECEIVER_ID + "=?) OR " +
+                        "(" + DbHelper.SENDER_ID + "=? AND " + DbHelper.RECEIVER_ID + "=?)",
+                new String[] {Integer.toString(ID1), Integer.toString(ID2),
+                        Integer.toString(ID2), Integer.toString(ID1)},
+                null, null, null, null);
 
         if (cursor.getCount() <= 0) {
             return null;
