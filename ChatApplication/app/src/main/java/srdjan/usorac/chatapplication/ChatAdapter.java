@@ -7,11 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+
+import static srdjan.usorac.chatapplication.R.layout.*;
 
 public class ChatAdapter extends BaseAdapter implements View.OnLongClickListener {
 
@@ -71,11 +75,13 @@ public class ChatAdapter extends BaseAdapter implements View.OnLongClickListener
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.message_box, null);
+            convertView = inflater.inflate(message_box, null);
 
             ViewHolder holder = new ViewHolder();
             holder.box = convertView.findViewById(R.id.message_box);
+            holder.send_receive = convertView.findViewById(R.id.send_receive);
             holder.box.setTag(position);
+            holder.send_receive.setTag(position);
 
             convertView.setTag(holder);
 
@@ -91,11 +97,15 @@ public class ChatAdapter extends BaseAdapter implements View.OnLongClickListener
 
         if (chat.getmSender().getmID() == senderID) {
             convertView.setBackgroundColor(convertView.getResources().getColor(R.color.chat0));
-            holder.box.setPadding(400, 0, 20, 0);
+            holder.box.setGravity(Gravity.END);
+            holder.send_receive.setText("S:");
+            holder.send_receive.setGravity(Gravity.START);
         }
         else {
             convertView.setBackgroundColor(convertView.getResources().getColor(R.color.chat1));
-            holder.box.setPadding(20, 0, 400, 0);
+            holder.box.setGravity(Gravity.START);
+            holder.send_receive.setText("R:");
+            holder.send_receive.setGravity(Gravity.END);
         }
 
         holder.box.setLongClickable(true);
@@ -111,12 +121,24 @@ public class ChatAdapter extends BaseAdapter implements View.OnLongClickListener
             int i = Integer.parseInt(v.getTag().toString());
 
             mDbHelper = DbHelper.getInstance(mContext.getApplicationContext());
-            Chat chat = mDbHelper.getMessage(i);
+            Chat chat = chatList.get(i);
 
-            mDbHelper.deleteMessage(chat.getId());
-            chatList.remove(i);
+            SharedPreferences preferences = mContext.getApplicationContext().getSharedPreferences("MyPreferences", 0);
+            int senderID = preferences.getInt("senderID", -1);
 
-            notifyDataSetChanged();
+            if (senderID != chat.getmSender().getmID()) {
+                Toast.makeText(mContext.getApplicationContext(), "Cannot delete received messages!", Toast.LENGTH_SHORT).show();
+            }
+            else {
+
+                mDbHelper.deleteMessage(chat.getId());
+                chatList.remove(i);
+
+
+                notifyDataSetChanged();
+
+            }
+
             return true;
         }
         else {
@@ -126,5 +148,6 @@ public class ChatAdapter extends BaseAdapter implements View.OnLongClickListener
 
     private class ViewHolder {
         public TextView box;
+        public TextView send_receive;
     }
 }

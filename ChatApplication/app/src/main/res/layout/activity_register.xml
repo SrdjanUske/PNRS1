@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -99,7 +103,7 @@
     <DatePicker
         android:id="@+id/date_picker"
         android:layout_width="match_parent"
-        android:layout_height="254dp"
+        android:layout_height="300dp"
         android:datePickerMode="spinner"
         android:spinnersShown="false">
 
@@ -110,7 +114,9 @@
         android:layout_width="175dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="95dp"
-        android:text="@string/register" />
+        android:text="@string/register"
+        android:layout_gravity="bottom"/>
 
+    </LinearLayout>
 
-</LinearLayout>
+</ScrollView>
