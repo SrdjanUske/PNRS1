@@ -28,6 +28,20 @@ public class ChatAdapter extends BaseAdapter implements View.OnLongClickListener
         chatList.add(message);
     }
 
+
+    public void update(Chat[] chats) {
+
+        chatList.clear();
+        if(chats != null) {
+            for(Chat chat : chats) {
+                chatList.add(chat);
+            }
+        }
+
+        notifyDataSetChanged();
+    }
+
+
     @Override
     public int getCount() {
         return chatList.size();

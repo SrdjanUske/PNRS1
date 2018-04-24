@@ -46,6 +46,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 COLUMN_FIRST_NAME + " TEXT, " +
                 COLUMN_LAST_NAME + " TEXT);" );
 
+
         db.execSQL("CREATE TABLE " + CHAT_TABLE_NAME + " (" +
                 MESSAGE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 SENDER_ID + " INTEGER, " +

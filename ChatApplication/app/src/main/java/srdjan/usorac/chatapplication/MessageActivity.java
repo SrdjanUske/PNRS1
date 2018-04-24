@@ -67,17 +67,16 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         message.addTextChangedListener(this);
     }
 
+    public void update(int sender_id, int receiver_id) {
+
+        Chat[] chats = mDbHelper.readMessages(sender_id, receiver_id);
+        chat_list.update(chats);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
-
-        Chat[] chats = mDbHelper.readMessages(sender_id, receiver_id);
-
-        if (chats != null) {
-            for (Chat chat : chats) {
-                mDbHelper.insertMessage(chat);
-            }
-        }
+        update(sender_id, receiver_id);
     }
 
     @Override
