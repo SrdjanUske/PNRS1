@@ -17,7 +17,6 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
     private Button logout;
     private ImageView chat;
     private CharacterAdapter adapter;
-    SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +48,6 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
                 if (!(contact.getUserName().equals(username))) {
 
                     adapter.addCharacter(contact);
-                }
-                else {
-                    preferences = getApplicationContext().getSharedPreferences("MyPreferences", 0);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putInt("senderID", contact.getmID());
-                    editor.commit();
                 }
             }
         }

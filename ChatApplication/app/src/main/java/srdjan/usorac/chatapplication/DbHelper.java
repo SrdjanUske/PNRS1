@@ -15,7 +15,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     // table of contacts on my app
     public static final String TABLE_NAME = "contacts_table";
-    public static String CONTACT_ID = "ContactID";
+    public static final String CONTACT_ID = "ContactID";
     public static final String COLUMN_USER_NAME = "UserName";
     public static final String COLUMN_FIRST_NAME = "FirstName";
     public static final String COLUMN_LAST_NAME = "LastName";
@@ -86,25 +86,6 @@ public class DbHelper extends SQLiteOpenHelper {
         close();
     }
 
-    public Contact getContact(String username) {
-        SQLiteDatabase db = instance.getReadableDatabase();
-
-        Cursor cursor = db.query(DbHelper.TABLE_NAME, null,
-                DbHelper.COLUMN_USER_NAME + "=?", new String[] {username},
-                null, null, null);
-
-        if (cursor.getCount() <= 0) {
-            return null;
-        }
-
-        cursor.moveToFirst();
-        Contact contact = createContact(cursor);
-
-        db.close();
-
-        return contact;
-    }
-
     public Contact getContact(int id) {
         SQLiteDatabase db = instance.getReadableDatabase();
 
@@ -142,12 +123,6 @@ public class DbHelper extends SQLiteOpenHelper {
         return contacts;
     }
 
-    public void deleteContact(int id) {
-        SQLiteDatabase db = getWritableDatabase();
-        db.delete(DbHelper.TABLE_NAME, DbHelper.CONTACT_ID + "=?", new String[] {String.valueOf(id)});
-        close();
-    }
-
 
 
 
@@ -175,25 +150,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
         db.insert(CHAT_TABLE_NAME, null, values);
         close();
-    }
-
-    public Chat getMessage(int id) {
-        SQLiteDatabase db = instance.getReadableDatabase();
-
-        Cursor cursor = db.query(DbHelper.CHAT_TABLE_NAME, null,
-                DbHelper.MESSAGE_ID + "=?", new String[] {Integer.toString(id)},
-                null, null, null);
-
-        if (cursor.getCount() <= 0) {
-            return null;
-        }
-
-        cursor.moveToFirst();
-        Chat chat = createMessage(cursor);
-
-        db.close();
-
-        return chat;
     }
 
     public Chat[] readMessages(int ID1, int ID2) {

@@ -41,14 +41,6 @@ public class  MainActivity extends AppCompatActivity implements View.OnClickList
         mDbHelper = DbHelper.getInstance(this);
         contacts = mDbHelper.readContacts();
 
-        // ako hocu da resetujem bazu
-        /*if (contacts.length != 0) {
-            int i = 0;
-            for (Contact contact : contacts) {
-                mDbHelper.deleteContact(++i);
-            }
-        }*/
-
     }
 
     @Override
@@ -73,7 +65,7 @@ public class  MainActivity extends AppCompatActivity implements View.OnClickList
 
                         preferences = getApplicationContext().getSharedPreferences("MyPreferences", 0);
                         SharedPreferences.Editor editor = preferences.edit();
-                        editor.putInt("sender" + (i + 1), i + 1);
+                        editor.putInt("senderID", contacts[i].getmID());
                         editor.commit();
 
                         Intent intent = new Intent(this, ContactsActivity.class);

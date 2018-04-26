@@ -65,6 +65,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             contact = new Contact(0, username.getText().toString(),
                     firstName.getText().toString(),
                     lastName.getText().toString());
+
             mDbHelper.insertContact(contact);
 
             Intent intent = new Intent(this, MainActivity.class);
