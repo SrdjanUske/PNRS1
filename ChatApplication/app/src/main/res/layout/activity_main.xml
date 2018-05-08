@@ -15,7 +15,7 @@
 
         <EditText
             android:id="@+id/username"
-            android:layout_width="153dp"
+            android:layout_width="154dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:ems="20"
@@ -24,16 +24,42 @@
             android:shadowColor="@color/colorPrimaryDark"
             android:textColor="@color/colorAccent" />
 
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="154dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:ems="20"
-            android:inputType="textPassword"
-            android:hint="@string/password"
-            android:shadowColor="@color/colorPrimaryDark"
-            android:textColor="@color/colorAccent" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.9"/>
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="154dp"
+                android:layout_height="wrap_content"
+                android:ems="20"
+                android:inputType="textPassword"
+                android:hint="@string/password"
+                android:shadowColor="@color/colorPrimaryDark"
+                android:textColor="@color/colorAccent" />
+
+            <ImageView
+                android:id="@+id/passwordView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:srcCompat="@android:drawable/ic_menu_view" />
+
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.65"/>
+
+
+        </LinearLayout>
+
+
 
     </LinearLayout>
 

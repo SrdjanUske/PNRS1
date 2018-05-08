@@ -1,9 +1,0 @@
-1 Adapter
-    1.1 Napraviti aplikaciju AdapterExample
-    1.2 Napraviti layout za element list
-    1.3 Napraviti klasu Character
-    1.4 Napraviti CharacterAdapter
-    1.5 Implementirati getView bez optimizacija
-        1.4.1 Objasniti LayoutInflater
-    1.6 Optimizovati sa convertView
-    1.7 Optimizovati sa ViewHolder klasom 
