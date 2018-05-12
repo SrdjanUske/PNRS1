@@ -2,27 +2,33 @@ package srdjan.usorac.chatapplication;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
-import android.text.method.HideReturnsTransformationMethod;
-import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-public class  MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnFocusChangeListener, TextWatcher, View.OnLongClickListener {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+
+public class  MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnFocusChangeListener, TextWatcher {
 
     Button login_button, register_button;
     EditText username, password;
-    private DbHelper mDbHelper;
+    //private DbHelper mDbHelper;
     private Contact[] contacts;
     SharedPreferences preferences;
-    ImageView imageView;
+    private Handler handler;
+    private HttpHelper httpHelper;
+    public static String BASE_URL = "http://18.205.194.168";
+    public static String LOGIN_URL = BASE_URL + "/login/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,9 +36,6 @@ public class  MainActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_main);
         login_button = findViewById(R.id.login);
         register_button = findViewById(R.id.register);
-
-        imageView = (ImageView) findViewById(R.id.passwordView);
-        imageView.setLongClickable(true);
 
         register_button.setOnClickListener(this);
         login_button.setOnClickListener(this);
@@ -45,9 +48,10 @@ public class  MainActivity extends AppCompatActivity implements View.OnClickList
         username.addTextChangedListener(this);
         password.addTextChangedListener(this);
 
-        mDbHelper = DbHelper.getInstance(this);
-        contacts = mDbHelper.readContacts();
-
+        /*mDbHelper = DbHelper.getInstance(this);
+        contacts = mDbHelper.readContacts();*/
+        handler = new Handler();
+        httpHelper = new HttpHelper(this);
     }
 
     @Override
@@ -57,7 +61,7 @@ public class  MainActivity extends AppCompatActivity implements View.OnClickList
             startActivity(intent);
         }
         else if (view.getId() == R.id.login) {
-            boolean exist = false;
+            /*boolean exist = false;
 
             if (contacts == null) {
 
@@ -84,7 +88,31 @@ public class  MainActivity extends AppCompatActivity implements View.OnClickList
                     Toast.makeText(getApplicationContext(), "Username not recognized!", Toast.LENGTH_SHORT).show();
                     Toast.makeText(getApplicationContext(), "If you're not register, click REGISTER button!", Toast.LENGTH_SHORT).show();
                 }
-            }
+            }*/
+
+            new Thread(new Runnable() {
+                public void run() {
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("username", username.getText().toString());
+                        jsonObject.put("password", password.getText().toString());
+                        final int success = httpHelper.postJSONObjectFromURL(MainActivity.LOGIN_URL, jsonObject);
+                        //int sessionID =
+                        handler.post(new Runnable(){
+                            public void run() {
+                                Toast.makeText(MainActivity.this, "Login: " + success, Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+
+            Intent intent = new Intent(this, ContactsActivity.class);
+            startActivity(intent);
         }
     }
 
@@ -112,22 +140,6 @@ public class  MainActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void afterTextChanged(Editable editable) {
-        if (password.getText().toString().length() > 0) {
-            imageView.setOnLongClickListener(this);
-        }
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        password.setTransformationMethod(PasswordTransformationMethod.getInstance());
-    }
-
-    @Override
-    public boolean onLongClick(View v) {
-        if (v.getId() == R.id.passwordView) {
-            password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-        }
-        return true;
     }
 }

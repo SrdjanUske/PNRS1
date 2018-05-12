@@ -2,6 +2,7 @@ package srdjan.usorac.chatapplication;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -26,7 +27,11 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
     TextView name;
     ListView list;
     ChatAdapter chat_list;
-    DbHelper mDbHelper;
+    //DbHelper mDbHelper;
+    private Handler handler;
+    private HttpHelper httpHelper;
+    public static String BASE_URL = "http://18.205.194.168";
+    //public static String LOGIN_URL = BASE_URL + "/login/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +46,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         sender_id = preferences.getInt("senderID", -1);
         receiver_id = chat_contact.getInt("receiverID");
 
-        mDbHelper = DbHelper.getInstance(this);
+        //mDbHelper = DbHelper.getInstance(this);
 
         logout = findViewById(R.id.logout_from_chat);
         logout.setOnClickListener(this);
@@ -51,13 +56,13 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         list.setAdapter(chat_list);
 
         // initializing
-        Chat[] chats = mDbHelper.readMessages(sender_id, receiver_id);
+        /*Chat[] chats = mDbHelper.readMessages(sender_id, receiver_id);
 
         if (chats != null) {
             for (Chat chat : chats) {
                 chat_list.addMessage(chat);
             }
-        }
+        }*/
 
         send = findViewById(R.id.send);
         send.setEnabled(false);
@@ -67,16 +72,16 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         message.addTextChangedListener(this);
     }
 
-    public void update(int sender_id, int receiver_id) {
+    /*public void update(int sender_id, int receiver_id) {
 
         Chat[] chats = mDbHelper.readMessages(sender_id, receiver_id);
         chat_list.update(chats);
-    }
+    }*/
 
     @Override
     protected void onResume() {
         super.onResume();
-        update(sender_id, receiver_id);
+        //update(sender_id, receiver_id);
     }
 
     @Override
@@ -89,14 +94,14 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         }
         else if(view.getId() == R.id.send){
 
-            Contact sender = mDbHelper.getContact(sender_id);
+            /*Contact sender = mDbHelper.getContact(sender_id);
             Contact receiver = mDbHelper.getContact(receiver_id);
 
             Chat chat = new Chat(0, sender, receiver, message.getText().toString());
             mDbHelper.insertMessage(chat);
 
             chat_list.addMessage(chat);
-            chat_list.notifyDataSetChanged();
+            chat_list.notifyDataSetChanged(); */
 
             Toast.makeText(getApplicationContext(), "Message is sent", Toast.LENGTH_SHORT).show();
             message.setText("");

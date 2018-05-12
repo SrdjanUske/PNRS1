@@ -1,11 +1,8 @@
 package srdjan.usorac.chatapplication;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,14 +15,14 @@ import java.util.ArrayList;
 public class CharacterAdapter extends BaseAdapter implements View.OnClickListener {
 
     private Context mContext;
-    private ArrayList<Contact> mContacts;
+    private ArrayList<User> mContacts;
 
     public CharacterAdapter(Context mContext) {
         this.mContext = mContext;
-        mContacts = new ArrayList<Contact>();
+        mContacts = new ArrayList<User>();
     }
 
-    public void addCharacter(Contact character) {
+    public void addCharacter(User character) {
         mContacts.add(character);
         notifyDataSetChanged();
     }
@@ -77,11 +74,11 @@ public class CharacterAdapter extends BaseAdapter implements View.OnClickListene
             view.setTag(holder);
         }
 
-        Contact contact = (Contact) getItem(i);
+        User contact = (User) getItem(i);
         ViewHolder holder = (ViewHolder) view.getTag();
 
-        holder.name.setText(String.valueOf(contact.getFirstName() + " " + contact.getLastName()));
-        holder.first_letter.setText(String.valueOf(contact.getFirstName().toUpperCase().charAt(0)));
+        holder.name.setText(String.valueOf(contact.getUsername()));
+        holder.first_letter.setText(String.valueOf(contact.getUsername().toUpperCase().charAt(0)));
 
         return view;
     }
@@ -92,13 +89,13 @@ public class CharacterAdapter extends BaseAdapter implements View.OnClickListene
         if (v.getId() == R.id.imageView) {
 
             int k = Integer.parseInt(v.getTag().toString());
-            Contact contact = mContacts.get(k);
+            User contact = mContacts.get(k);
 
             Intent intent = new Intent(mContext.getApplicationContext(), MessageActivity.class);
 
             Bundle bundle = new Bundle();
-            bundle.putString("contact_name", contact.getFirstName() + " " + contact.getLastName());
-            bundle.putInt("receiverID", contact.getmID());
+            bundle.putString("contact_name", contact.getUsername());
+            bundle.putString("receiverID", contact.getSessionID());
 
             intent.putExtras(bundle);
             mContext.startActivity(intent);

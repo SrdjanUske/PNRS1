@@ -1,17 +1,23 @@
 package srdjan.usorac.chatapplication;
 
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.content.Intent;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,8 +27,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private Button register_now;
     private EditText username, password, email, firstName, lastName;
     private DatePicker date_picker;
-    private DbHelper mDbHelper;
+    //private DbHelper mDbHelper;
     private Contact contact;
+    private Handler handler;
+    private HttpHelper httpHelper;
+    public static String BASE_URL = "http://18.205.194.168";
+    public static String REGISTER_URL = BASE_URL + "/register/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,18 +65,41 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         Date time = Calendar.getInstance().getTime();
         date_picker.setMaxDate(time.getTime());
 
-        mDbHelper = DbHelper.getInstance(this);
+        //mDbHelper = DbHelper.getInstance(this);
+        handler = new Handler();
+        httpHelper = new HttpHelper(this);
     }
 
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.register_register) {
 
-            contact = new Contact(0, username.getText().toString(),
+            /*contact = new Contact(0, username.getText().toString(),
                     firstName.getText().toString(),
                     lastName.getText().toString());
 
-            mDbHelper.insertContact(contact);
+            mDbHelper.insertContact(contact);*/
+            new Thread(new Runnable() {
+                public void run() {
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("username", username.getText().toString());
+                        jsonObject.put("password", password.getText().toString());
+                        jsonObject.put("email", email.getText().toString());
+                        final int success = httpHelper.postJSONObjectFromURL(RegisterActivity.REGISTER_URL, jsonObject);
+                        String sessionID = "";
+                        handler.post(new Runnable(){
+                            public void run() {
+                                Toast.makeText(RegisterActivity.this,"Adding new contact: " + success, Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
 
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);

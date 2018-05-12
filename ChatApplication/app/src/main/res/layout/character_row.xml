@@ -10,9 +10,7 @@
         android:layout_width="65dp"
         android:layout_height="65dp"
         android:gravity="center"
-        android:textSize="25sp"
-
-        />
+        android:textSize="25sp" />
 
     <TextView
         android:id="@+id/contact_name"
@@ -31,7 +29,6 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="10dp"
         android:layout_marginTop="7dp"
-
         android:background="@color/buttonBackground"/>
 
 
