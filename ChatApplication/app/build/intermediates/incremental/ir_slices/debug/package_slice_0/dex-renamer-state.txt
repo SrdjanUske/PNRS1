@@ -1,0 +1,4 @@
+#Sat May 12 17:53:10 CEST 2018
+base.0=D\:\\VI Semestar\\PNRS1\\ChatApplication\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\31
+path.0=classes.dex
+renamed.0=classes.dex
