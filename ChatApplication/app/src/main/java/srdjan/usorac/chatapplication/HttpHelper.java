@@ -41,7 +41,7 @@ public class HttpHelper {
             return null;
         }
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+        BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
         StringBuilder sb = new StringBuilder();
         String line;
         while ((line = br.readLine()) != null) {
