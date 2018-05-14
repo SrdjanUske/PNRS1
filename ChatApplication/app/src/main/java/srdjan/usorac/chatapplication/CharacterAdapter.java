@@ -15,16 +15,20 @@ import java.util.ArrayList;
 public class CharacterAdapter extends BaseAdapter implements View.OnClickListener {
 
     private Context mContext;
-    private ArrayList<User> mContacts;
+    private ArrayList<Contact> mContacts;
 
     public CharacterAdapter(Context mContext) {
         this.mContext = mContext;
-        mContacts = new ArrayList<User>();
+        mContacts = new ArrayList<Contact>();
     }
 
-    public void addCharacter(User character) {
-        mContacts.add(character);
+    public void addCharacter(Contact contact) {
+        mContacts.add(contact);
         notifyDataSetChanged();
+    }
+
+    public void clear() {
+        mContacts.clear();
     }
 
     @Override
@@ -89,13 +93,13 @@ public class CharacterAdapter extends BaseAdapter implements View.OnClickListene
         if (v.getId() == R.id.imageView) {
 
             int k = Integer.parseInt(v.getTag().toString());
-            User contact = mContacts.get(k);
+            Contact contact = mContacts.get(k);
 
             Intent intent = new Intent(mContext.getApplicationContext(), MessageActivity.class);
 
             Bundle bundle = new Bundle();
-            bundle.putString("contact_name", contact.getUsername());
-            bundle.putString("receiverID", contact.getSessionID());
+            bundle.putString("contact_name", contact.getUserName());
+            bundle.putString("receiverID", String.valueOf(contact.getmID()));
 
             intent.putExtras(bundle);
             mContext.startActivity(intent);

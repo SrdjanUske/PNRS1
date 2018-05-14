@@ -25,9 +25,8 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
     private CharacterAdapter adapter;
     private Handler handler;
     private HttpHelper httpHelper;
-    public static String BASE_URL = "http://18.205.194.168";
-    public static String CONTACTS_URL = BASE_URL + "/contacts/";
-    private User[] users;
+    public static String CONTACTS_URL = HttpHelper.BASE_URL + "/contacts";
+    public static String LOGOUT_URL = HttpHelper.BASE_URL + "/logout";
     private String username;
     private String sessionID;
 
@@ -67,56 +66,82 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
             }
         }*/
         handler = new Handler();
-        httpHelper = new HttpHelper(this);
+        httpHelper = new HttpHelper();
         preferences = getApplicationContext().getSharedPreferences("MyPreferences", 0);
-        sessionID = preferences.getString("sessionID", "");
+        sessionID = preferences.getString("sessionID", null);
+        username = preferences.getString("logged_in", null);
     }
 
     @Override
     public void onClick(View view) {
 
-        Intent intent;
-
         if (view.getId() == R.id.logout) {
-            intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        }
-        else if (view.getId() == R.id.refresh) {
-
             new Thread(new Runnable() {
+                @Override
                 public void run() {
                     try {
-                        JSONArray jsonArray = httpHelper.getJSONArrayFromURL(ContactsActivity.CONTACTS_URL + "?" + sessionID);
-                        if(jsonArray != null) {
-                            users = new User[jsonArray.length()];
-                            for(int i = 0; i < jsonArray.length(); i++) {
-                                final int index = i;
-                                JSONObject jsonobject = jsonArray.getJSONObject(i);
-                                username = jsonobject.getString("username");
-                                User user = new User(sessionID, username);
-                                users[i] = user;
-                                handler.post(new Runnable(){
-                                    public void run() {
-                                        adapter.addCharacter(users[index]);
-                                        Toast.makeText(ContactsActivity.this,"Got contact: " + index, Toast.LENGTH_LONG).show();
-                                    }
-                                });
-                            }
+                        final HttpHelper.Responce success = httpHelper.postJSONObjectFromURL(LOGOUT_URL, new JSONObject(), sessionID);
+                        if (success.responceCode == HttpHelper.SUCCESS) {
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), "Logging out!", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        } else {
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(ContactsActivity.this, "ERROR " + success.responceCode + ": " + success.responceMessage, Toast.LENGTH_LONG).show();
+                                }
+                            });
                         }
-                        handler.post(new Runnable(){
-                            public void run() {
-                                Toast.makeText(ContactsActivity.this,"No contacts!", Toast.LENGTH_LONG).show();
-                            }
-                        });
-
-                    } catch (IOException e) {
+                    }catch (IOException e) {
                         e.printStackTrace();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
             }).start();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+
         }
+        else if (view.getId() == R.id.refresh) {
+            getContacts();
+        }
+    }
+
+    public void getContacts() {
+        adapter.clear();
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    JSONArray jsonArray = httpHelper.getJSONArrayFromURL(ContactsActivity.CONTACTS_URL, sessionID);
+
+                    if (jsonArray == null) {
+                        Toast.makeText(ContactsActivity.this, "Unknown error, returning to MainActivity!", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                    }
+                    else {
+                        for(int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonobject = jsonArray.getJSONObject(i);
+                            String user = jsonobject.getString(HttpHelper.USERNAME);
+                            Contact contact = new Contact(username);
+
+                            if (!username.equals(user)) {
+                                adapter.addCharacter(contact);
+                            }
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     @Override

@@ -27,8 +27,7 @@ public class  MainActivity extends AppCompatActivity implements View.OnClickList
     SharedPreferences preferences;
     private Handler handler;
     private HttpHelper httpHelper;
-    public static String BASE_URL = "http://18.205.194.168";
-    public static String LOGIN_URL = BASE_URL + "/login/";
+    public static String LOGIN_URL = HttpHelper.BASE_URL + "/login";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +50,7 @@ public class  MainActivity extends AppCompatActivity implements View.OnClickList
         /*mDbHelper = DbHelper.getInstance(this);
         contacts = mDbHelper.readContacts();*/
         handler = new Handler();
-        httpHelper = new HttpHelper(this);
+        httpHelper = new HttpHelper();
     }
 
     @Override
@@ -94,13 +93,28 @@ public class  MainActivity extends AppCompatActivity implements View.OnClickList
                 public void run() {
                     JSONObject jsonObject = new JSONObject();
                     try {
-                        jsonObject.put("username", username.getText().toString());
-                        jsonObject.put("password", password.getText().toString());
-                        final int success = httpHelper.postJSONObjectFromURL(MainActivity.LOGIN_URL, jsonObject);
-                        //int sessionID =
+                        jsonObject.put(HttpHelper.USERNAME, username.getText().toString());
+                        jsonObject.put(HttpHelper.PASSWORD, password.getText().toString());
+
+                        final HttpHelper.Responce success = httpHelper.postJSONObjectFromURL(MainActivity.LOGIN_URL, jsonObject);
+
                         handler.post(new Runnable(){
                             public void run() {
-                                Toast.makeText(MainActivity.this, "Login: " + success, Toast.LENGTH_LONG).show();
+                                if (success.responceCode == HttpHelper.SUCCESS) {
+                                    Toast.makeText(MainActivity.this, "Login: " + success.responceMessage, Toast.LENGTH_LONG).show();
+                                    Intent intent = new Intent(getApplicationContext(), ContactsActivity.class);
+
+                                    preferences = getApplicationContext().getSharedPreferences("MyPreferences", 0);
+                                    SharedPreferences.Editor editor = preferences.edit();
+                                    editor.putString("sessionID", success.sessionID);
+                                    editor.putString("logged_in", username.getText().toString());
+                                    editor.commit();
+                                    startActivity(intent);
+
+                                }
+                                else {
+                                    Toast.makeText(MainActivity.this, "ERROR " + success.responceCode + ": " + success.responceMessage , Toast.LENGTH_LONG).show();
+                                }
                             }
                         });
                     } catch (JSONException e) {
@@ -110,9 +124,6 @@ public class  MainActivity extends AppCompatActivity implements View.OnClickList
                     }
                 }
             }).start();
-
-            Intent intent = new Intent(this, ContactsActivity.class);
-            startActivity(intent);
         }
     }
 

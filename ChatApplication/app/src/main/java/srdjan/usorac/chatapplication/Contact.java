@@ -13,6 +13,10 @@ public class Contact {
         this.mLastName = mLastName;
     }
 
+    public Contact(String mUserName) {
+        this.mUserName = mUserName;
+    }
+
     public int getmID() { return mID; }
 
     public String getUserName() {

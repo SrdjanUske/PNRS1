@@ -31,8 +31,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private Contact contact;
     private Handler handler;
     private HttpHelper httpHelper;
-    public static String BASE_URL = "http://18.205.194.168";
-    public static String REGISTER_URL = BASE_URL + "/register/";
+    public static String REGISTER_URL = HttpHelper.BASE_URL + "/register";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +66,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         //mDbHelper = DbHelper.getInstance(this);
         handler = new Handler();
-        httpHelper = new HttpHelper(this);
+        httpHelper = new HttpHelper();
     }
 
     @Override
@@ -83,14 +82,22 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 public void run() {
                     JSONObject jsonObject = new JSONObject();
                     try {
-                        jsonObject.put("username", username.getText().toString());
-                        jsonObject.put("password", password.getText().toString());
-                        jsonObject.put("email", email.getText().toString());
-                        final int success = httpHelper.postJSONObjectFromURL(RegisterActivity.REGISTER_URL, jsonObject);
-                        String sessionID = "";
+                        jsonObject.put(HttpHelper.USERNAME, username.getText().toString());
+                        jsonObject.put(HttpHelper.PASSWORD, password.getText().toString());
+                        jsonObject.put(HttpHelper.EMAIL, email.getText().toString());
+
+                        final HttpHelper.Responce success = httpHelper.postJSONObjectFromURL(RegisterActivity.REGISTER_URL, jsonObject);
+
                         handler.post(new Runnable(){
                             public void run() {
-                                Toast.makeText(RegisterActivity.this,"Adding new contact: " + success, Toast.LENGTH_LONG).show();
+                                if (success.responceCode == HttpHelper.SUCCESS) {
+                                    Toast.makeText(RegisterActivity.this, "Added new contact!", Toast.LENGTH_LONG).show();
+                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                    startActivity(intent);
+                                }
+                                else {
+                                    Toast.makeText(RegisterActivity.this, "ERROR " + success.responceCode + ": " + success.responceMessage, Toast.LENGTH_LONG).show();
+                                }
                             }
                         });
                     } catch (JSONException e) {
@@ -100,9 +107,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     }
                 }
             }).start();
-
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
         }
     }
 
