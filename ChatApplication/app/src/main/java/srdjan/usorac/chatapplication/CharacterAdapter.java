@@ -78,11 +78,12 @@ public class CharacterAdapter extends BaseAdapter implements View.OnClickListene
             view.setTag(holder);
         }
 
-        User contact = (User) getItem(i);
+        Contact contact = (Contact) getItem(i);
+
         ViewHolder holder = (ViewHolder) view.getTag();
 
-        holder.name.setText(String.valueOf(contact.getUsername()));
-        holder.first_letter.setText(String.valueOf(contact.getUsername().toUpperCase().charAt(0)));
+        holder.name.setText(String.valueOf(contact.getUserName()));
+        holder.first_letter.setText(String.valueOf(contact.getUserName().toUpperCase().charAt(0)));
 
         return view;
     }

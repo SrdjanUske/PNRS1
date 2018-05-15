@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "D:\\VI Semestar\\PNRS1\\ChatApplication\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-port\\values-port.xml",
+            "outputFile": "D:\\RA60-2015\\PNRS1\\ChatApplication\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-port\\values-port.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\susor\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.0.aar\\9b92d3fbc196d9ebf26c65f4051a1365\\res\\values-port\\values-port.xml",
+                    "source": "C:\\Users\\student\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.0.aar\\8dfa46c2f406727df591e31289ae1e10\\res\\values-port\\values-port.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

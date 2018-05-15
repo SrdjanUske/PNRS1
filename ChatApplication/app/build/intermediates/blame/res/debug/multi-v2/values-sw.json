@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "D:\\VI Semestar\\PNRS1\\ChatApplication\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-sw\\values-sw.xml",
+            "outputFile": "D:\\RA60-2015\\PNRS1\\ChatApplication\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-sw\\values-sw.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\susor\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.0.aar\\9b92d3fbc196d9ebf26c65f4051a1365\\res\\values-sw\\values-sw.xml",
+                    "source": "C:\\Users\\student\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.0.aar\\8dfa46c2f406727df591e31289ae1e10\\res\\values-sw\\values-sw.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -14,7 +14,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\susor\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-27.1.0.aar\\0e3bcffde500811539edbe211a4484d9\\res\\values-sw\\values-sw.xml",
+                    "source": "C:\\Users\\student\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-27.1.0.aar\\59745014d727403ae432c01af69ed631\\res\\values-sw\\values-sw.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
