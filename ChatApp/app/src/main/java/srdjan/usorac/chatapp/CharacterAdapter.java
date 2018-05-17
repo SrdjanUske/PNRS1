@@ -24,7 +24,6 @@ public class CharacterAdapter extends BaseAdapter implements View.OnClickListene
 
     public void addCharacter(Contact contact) {
         mContacts.add(contact);
-        notifyDataSetChanged();
     }
 
     public void clear() {

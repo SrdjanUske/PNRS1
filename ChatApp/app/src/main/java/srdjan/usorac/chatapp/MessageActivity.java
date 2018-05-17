@@ -150,7 +150,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
                         jsonObject.put(HttpHelper.RECEIVER, receiver);
                         jsonObject.put(HttpHelper.DATA, message.getText().toString());
 
-                        final HttpHelper.Responce success = httpHelper.postJSONObjectFromURL(MainActivity.LOGIN_URL, jsonObject, sessionID);
+                        final HttpHelper.Responce success = httpHelper.postJSONObjectFromURL(SEND_URL, jsonObject, sessionID);
 
                         if (success.responceCode == HttpHelper.SUCCESS) {
                                 handler.post(new Runnable(){

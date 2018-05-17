@@ -117,28 +117,39 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    JSONArray jsonArray = httpHelper.getJSONArrayFromURL(CONTACTS_URL, sessionID);
+                    final JSONArray jsonArray = httpHelper.getJSONArrayFromURL(CONTACTS_URL, sessionID);
 
                     if (jsonArray == null) {
-                        Toast.makeText(ContactsActivity.this, "Unknown error, returning to MainActivity!", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(intent);
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(ContactsActivity.this, "Unknown error, returning to MainActivity!", Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                startActivity(intent);
+                            }
+                        });
                     }
                     else {
-                        for(int i = 0; i < jsonArray.length(); i++) {
+                        for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonobject = jsonArray.getJSONObject(i);
                             String user = jsonobject.getString(HttpHelper.USERNAME);
-                            Contact contact = new Contact(username);
-
-                            if (!username.equals(user)) {
-                                adapter.addCharacter(contact);
-                            }
+                            Contact contact = new Contact(user);
+                                if (!username.equals(user)) {
+                                    adapter.addCharacter(contact);
+                                }
                         }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
                     e.printStackTrace();
+                } finally {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
                 }
             }
         }).start();
