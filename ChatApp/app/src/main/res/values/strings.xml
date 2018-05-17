@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">ChatApp</string>
+    <string name="username">username</string>
+    <string name="password">password</string>
+    <string name="login">LOGIN</string>
+    <string name="register">REGISTER</string>
+    <string name="log_out">LOG OUT</string>
+    <string name="my_friend">my friend</string>
+    <string name="send">SEND</string>
+    <string name="message_text">message text</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="email_address">email address</string>
+    <string name="gender">gender</string>
+    <string name="allow_notifications">Allow Notifications</string>
+    <string name="birth_date">Birth date</string>
+    <string name="my_chat_list">My chat list</string>
+    <string name="first_letter">K</string>
+    <string name="name_example">Pera Peric</string>
+    <string name="savo_dragovic">Savo Dragovic</string>
+    <string name="srdjan_usorac">Srdjan Usorac</string>
+    <string name="marko_markovic">Marko Markovic</string>
+    <string name="jovana_milosevic">Jovana Milosevic</string>
+    <string name="igor_ilic">Igor Ilic</string>
+    <string name="moja_mama">Moja Mama</string>
+    <string name="nikola_percevic">Nikola Percevic</string>
+    <string name="vladimir_spasojevic">Vladimir Spasojevic</string>
+    <string name="ruzica_mitric">Ruzica Mitric</string>
+    <string name="contact_list">contact_list</string>
+    <string name="refresh">REFRESH</string>
+    <string-array name="spinner">
+        <item>male</item>
+        <item>female</item>
+    </string-array>
+</resources>
