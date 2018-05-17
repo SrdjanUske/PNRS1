@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,9 +63,9 @@ public class CharacterAdapter extends BaseAdapter implements View.OnClickListene
             view = inflater.inflate(R.layout.character_row, null);
 
             ViewHolder holder = new ViewHolder();
-            holder.image = (ImageView) view.findViewById(R.id.imageView);
-            holder.name = (TextView) view.findViewById(R.id.contact_name);
-            holder.first_letter = (TextView) view.findViewById(R.id.first_letter);
+            holder.image = view.findViewById(R.id.imageView);
+            holder.name = view.findViewById(R.id.contact_name);
+            holder.first_letter = view.findViewById(R.id.first_letter);
 
             holder.first_letter.setBackgroundColor(Color.rgb((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255)));
 
@@ -72,7 +73,6 @@ public class CharacterAdapter extends BaseAdapter implements View.OnClickListene
             holder.image.getLayoutParams().width = 100;
             holder.image.getLayoutParams().height = 100;
             holder.image.setOnClickListener(this);
-            holder.image.setTag(i);
 
             view.setTag(holder);
         }
@@ -83,6 +83,7 @@ public class CharacterAdapter extends BaseAdapter implements View.OnClickListene
 
         holder.name.setText(String.valueOf(contact.getUserName()));
         holder.first_letter.setText(String.valueOf(contact.getUserName().toUpperCase().charAt(0)));
+        holder.image.setTag(i);
 
         return view;
     }
@@ -90,19 +91,20 @@ public class CharacterAdapter extends BaseAdapter implements View.OnClickListene
     @Override
     public void onClick(View v) {
 
-        if (v.getId() == R.id.imageView) {
+        switch (v.getId()) {
 
-            int k = Integer.parseInt(v.getTag().toString());
-            Contact contact = mContacts.get(k);
+            case R.id.imageView:
 
-            Intent intent = new Intent(mContext.getApplicationContext(), MessageActivity.class);
+                int k = Integer.parseInt(v.getTag().toString());
+                Contact contact = mContacts.get(k);
 
-            Bundle bundle = new Bundle();
-            bundle.putString("contact_name", contact.getUserName());
-            bundle.putString("receiverID", String.valueOf(contact.getmID()));
+                if (v.getId() == R.id.imageView) {
 
-            intent.putExtras(bundle);
-            mContext.startActivity(intent);
+                    Intent intent = new Intent(mContext.getApplicationContext(), MessageActivity.class);
+                    intent.putExtra(Contact.name, contact.getUserName());
+                    mContext.startActivity(intent);
+                }
+                break;
         }
     }
 

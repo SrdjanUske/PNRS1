@@ -25,7 +25,6 @@ public class ChatAdapter extends BaseAdapter implements View.OnLongClickListener
 
     public void addMessage(Chat message) {
         chatList.add(message);
-        notifyDataSetChanged();
     }
 
     public void clear() {
@@ -87,14 +86,14 @@ public class ChatAdapter extends BaseAdapter implements View.OnLongClickListener
         }
 
         SharedPreferences preferences = mContext.getApplicationContext().getSharedPreferences("MyPreferences", 0);
-        int senderID = preferences.getInt("senderID", -1);
+        String sender = preferences.getString("logged_in", null);
 
         Chat chat = (Chat) getItem(position);
         ViewHolder holder = (ViewHolder) convertView.getTag();
 
         holder.box.setText(chat.getmMessage());
 
-        if (chat.getmSender().getmID() == senderID) {
+        if (chat.getmSender().getUserName().equals(sender)) {
             convertView.setBackgroundColor(convertView.getResources().getColor(R.color.chat0));
             holder.box.setGravity(Gravity.END);
             holder.send_receive.setText("S:");
@@ -123,21 +122,16 @@ public class ChatAdapter extends BaseAdapter implements View.OnLongClickListener
             Chat chat = chatList.get(i);
 
             SharedPreferences preferences = mContext.getApplicationContext().getSharedPreferences("MyPreferences", 0);
-            int senderID = preferences.getInt("senderID", -1);
+            String sender = preferences.getString("logged_in", null);
 
-            if (senderID != chat.getmSender().getmID()) {
+            if (!chat.getmSender().getUserName().equals(sender)) {
                 Toast.makeText(mContext.getApplicationContext(), "Cannot delete received messages!", Toast.LENGTH_SHORT).show();
             }
             else {
-
                 mDbHelper.deleteMessage(chat.getId());
                 chatList.remove(i);
-
-
                 notifyDataSetChanged();
-
             }
-
             return true;
         }
         else {

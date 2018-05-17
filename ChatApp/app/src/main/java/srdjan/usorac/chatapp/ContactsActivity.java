@@ -19,14 +19,16 @@ import java.io.IOException;
 
 public class ContactsActivity extends AppCompatActivity implements View.OnClickListener {
 
+    public static final String CONTACTS_URL = HttpHelper.BASE_URL + "/contacts";
+    public static final String LOGOUT_URL = HttpHelper.BASE_URL + "/logout";
+
     public SharedPreferences preferences;
     private Button logout, refresh;
     private ImageView chat;
     private CharacterAdapter adapter;
     private Handler handler;
     private HttpHelper httpHelper;
-    public static String CONTACTS_URL = HttpHelper.BASE_URL + "/contacts";
-    public static String LOGOUT_URL = HttpHelper.BASE_URL + "/logout";
+    private Contact[] contacts;
     private String username;
     private String sessionID;
 
@@ -44,29 +46,12 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
 
         adapter = new CharacterAdapter(this);
 
-        ListView list = (ListView) findViewById(R.id.contacts_list);
+        ListView list = findViewById(R.id.contacts_list);
         list.setAdapter(adapter);
 
-        //Bundle bundle = getIntent().getExtras();
-        //String username = bundle.getString("UserName");
-
-        /*DbHelper mDbHelper = DbHelper.getInstance(this);
-        Contact[] contacts = mDbHelper.readContacts();
-
-        if (contacts == null) {
-            Toast.makeText(getApplicationContext(), "No contacts!", Toast.LENGTH_SHORT).show();
-        }
-        else {
-
-            for (Contact contact : contacts) {
-                if (!(contact.getUserName().equals(username))) {
-
-                    adapter.addCharacter(contact);
-                }
-            }
-        }*/
         handler = new Handler();
         httpHelper = new HttpHelper();
+
         preferences = getApplicationContext().getSharedPreferences("MyPreferences", 0);
         sessionID = preferences.getString("sessionID", null);
         username = preferences.getString("logged_in", null);
@@ -98,18 +83,21 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
                         }
                     }catch (IOException e) {
                         e.printStackTrace();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
                 }
             }).start();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
-
         }
         else if (view.getId() == R.id.refresh) {
             getContacts();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //getContacts();
     }
 
     public void getContacts() {
@@ -130,12 +118,20 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
                         });
                     }
                     else {
+                        contacts = new Contact[jsonArray.length()];
                         for (int i = 0; i < jsonArray.length(); i++) {
+                            final int index = i;
                             JSONObject jsonobject = jsonArray.getJSONObject(i);
                             String user = jsonobject.getString(HttpHelper.USERNAME);
                             Contact contact = new Contact(user);
+                            contacts[i] = contact;
                                 if (!username.equals(user)) {
-                                    adapter.addCharacter(contact);
+                                    handler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            adapter.addCharacter(contacts[index]);
+                                        }
+                                    });
                                 }
                         }
                     }

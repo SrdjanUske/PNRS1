@@ -1,6 +1,9 @@
 package srdjan.usorac.chatapp;
 
 public class Contact {
+
+    public static final String name = "name";
+
     private int mID;
     private String mUserName;
     private String mFirstName;

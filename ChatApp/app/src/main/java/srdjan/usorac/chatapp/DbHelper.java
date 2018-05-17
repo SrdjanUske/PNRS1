@@ -64,7 +64,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
     /* methods for contacts_table */
-
+ /*==================================*/
     private Contact createContact(Cursor cursor) {
         int id = cursor.getInt(cursor.getColumnIndex(CONTACT_ID));
         String userName = cursor.getString(cursor.getColumnIndex(COLUMN_USER_NAME));
@@ -125,9 +125,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
 
-
     /* methods for chat_table */
-
+/*===============================*/
     private Chat createMessage(Cursor cursor) {
         int id = cursor.getInt(cursor.getColumnIndex(MESSAGE_ID));
         int senderID = cursor.getInt(cursor.getColumnIndex(SENDER_ID));

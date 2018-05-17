@@ -22,15 +22,15 @@ public class HttpHelper {
     public static final String PASSWORD = "password";
     public static final String EMAIL = "email";
     public static final String SESSION_ID = "sessionid";
+    public static final String SENDER = "sender";
     public static final String RECEIVER = "receiver";
     public static final String DATA = "data";
 
-    /*HTTP get json Array*/
+    /*HTTP get json Array -> for contact list and message list */
     public JSONArray getJSONArrayFromURL(String urlString, String sessionID) throws IOException, JSONException {
         HttpURLConnection urlConnection = null;
         java.net.URL url = new URL(urlString);
         urlConnection = (HttpURLConnection) url.openConnection();
-        /*header fields*/
         urlConnection.setRequestMethod("GET");
         urlConnection.setRequestProperty("Accept", "application/json");
         urlConnection.setReadTimeout(10000 /* milliseconds */);
@@ -52,10 +52,6 @@ public class HttpHelper {
         br.close();
 
         String jsonString = sb.toString();
-        //Log.d("HTTP GET", "JSON data- " + jsonString);
-
-        //Log.i("STATUS", String.valueOf(urlConnection.getResponseCode()));
-        //Log.i("MSG", urlConnection.getResponseMessage());
 
         int responseCode = urlConnection.getResponseCode();
         urlConnection.disconnect();
@@ -63,8 +59,8 @@ public class HttpHelper {
         return responseCode == SUCCESS ? new JSONArray(jsonString) : null;
     }
 
-    /*HTTP post*/
-    public Responce postJSONObjectFromURL(String urlString, JSONObject jsonObject) throws IOException, JSONException {
+    /*HTTP post (without sessionID) -> for register and login */
+    public Responce postJSONObjectFromURL(String urlString, JSONObject jsonObject) throws IOException {
         HttpURLConnection urlConnection = null;
         java.net.URL url = new URL(urlString);
         Responce responce = new Responce();
@@ -72,11 +68,11 @@ public class HttpHelper {
         urlConnection.setRequestMethod("POST");
         urlConnection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
         urlConnection.setRequestProperty("Accept", "application/json");
-        urlConnection.setReadTimeout(10000 /* milliseconds */);
-        urlConnection.setConnectTimeout(15000 /* milliseconds */);
-        /*needed when used POST or PUT methods*/
+        urlConnection.setReadTimeout(10000);
+        urlConnection.setConnectTimeout(15000);
         urlConnection.setDoOutput(true);
         urlConnection.setDoInput(true);
+
         try {
             urlConnection.connect();
         } catch (IOException e) {
@@ -85,7 +81,6 @@ public class HttpHelper {
             return responce;
         }
         DataOutputStream os = new DataOutputStream(urlConnection.getOutputStream());
-        /*write json object*/
         os.writeBytes(jsonObject.toString());
         os.flush();
         os.close();
@@ -94,19 +89,13 @@ public class HttpHelper {
         responce.responceMessage = urlConnection.getResponseMessage();
         responce.sessionID = urlConnection.getHeaderField(SESSION_ID);
 
-        //Log.i("STATUS", String.valueOf(urlConnection.getResponseCode()));
-        //Log.i("MSG", urlConnection.getResponseMessage());
         urlConnection.disconnect();
-
-        /*preferences = mContext.getApplicationContext().getSharedPreferences("MyPreferences", 0);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("sessionID", urlConnection.getHeaderField(0));
-        editor.commit();*/
 
         return responce;
     }
 
-    public Responce postJSONObjectFromURL(String urlString, JSONObject jsonObject, String sessionID) throws IOException, JSONException {
+    /*HTTP post (with sessionID) -> for sending a message and logging out */
+    public Responce postJSONObjectFromURL(String urlString, JSONObject jsonObject, String sessionID) throws IOException {
         HttpURLConnection urlConnection = null;
         java.net.URL url = new URL(urlString);
         Responce responce = new Responce();
@@ -115,11 +104,11 @@ public class HttpHelper {
         urlConnection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
         urlConnection.setRequestProperty("Accept", "application/json");
         urlConnection.setRequestProperty(SESSION_ID, sessionID);
-        urlConnection.setReadTimeout(10000 /* milliseconds */);
-        urlConnection.setConnectTimeout(15000 /* milliseconds */);
-        /*needed when used POST or PUT methods*/
+        urlConnection.setReadTimeout(10000);
+        urlConnection.setConnectTimeout(15000);
         urlConnection.setDoOutput(true);
         urlConnection.setDoInput(true);
+
         try {
             urlConnection.connect();
         } catch (IOException e) {
@@ -128,7 +117,6 @@ public class HttpHelper {
             return responce;
         }
         DataOutputStream os = new DataOutputStream(urlConnection.getOutputStream());
-        /*write json object*/
         os.writeBytes(jsonObject.toString());
         os.flush();
         os.close();
@@ -137,18 +125,12 @@ public class HttpHelper {
         responce.responceMessage = urlConnection.getResponseMessage();
         responce.sessionID = urlConnection.getHeaderField(SESSION_ID);
 
-        //Log.i("STATUS", String.valueOf(urlConnection.getResponseCode()));
-        //Log.i("MSG", urlConnection.getResponseMessage());
         urlConnection.disconnect();
-
-        /*preferences = mContext.getApplicationContext().getSharedPreferences("MyPreferences", 0);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("sessionID", urlConnection.getHeaderField(0));
-        editor.commit();*/
 
         return responce;
     }
 
+    /* Contains server response data (responceCode, responceMessage and header field sessionID)*/
     public class Responce {
         public int responceCode;
         public String responceMessage;

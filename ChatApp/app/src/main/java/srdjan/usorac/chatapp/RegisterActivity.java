@@ -24,29 +24,28 @@ import java.util.Date;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, View.OnFocusChangeListener, TextWatcher {
 
-    private Button register_now;
-    private EditText username, password, email, firstName, lastName;
-    private DatePicker date_picker;
-    //private DbHelper mDbHelper;
-    private Contact contact;
+    public static final String REGISTER_URL = HttpHelper.BASE_URL + "/register";
+
+    Button register_now;
+    EditText username, password, email, firstName, lastName;
+    DatePicker date_picker;
     private Handler handler;
     private HttpHelper httpHelper;
-    public static String REGISTER_URL = HttpHelper.BASE_URL + "/register";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        register_now = findViewById(R.id.register_register);
 
+        register_now = findViewById(R.id.register_register);
         register_now.setEnabled(false);
         register_now.setOnClickListener(this);
 
-        username = (EditText) findViewById(R.id.username_reg);
-        password = (EditText) findViewById(R.id.password_reg);
-        firstName = (EditText) findViewById(R.id.first_name);
-        lastName = (EditText) findViewById(R.id.last_name);
-        email = (EditText) findViewById(R.id.email_reg);
+        username = findViewById(R.id.username_reg);
+        password = findViewById(R.id.password_reg);
+        firstName = findViewById(R.id.first_name);
+        lastName = findViewById(R.id.last_name);
+        email = findViewById(R.id.email_reg);
 
         username.setOnFocusChangeListener(this);
         password.setOnFocusChangeListener(this);
@@ -60,11 +59,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         lastName.addTextChangedListener(this);
         email.addTextChangedListener(this);
 
-        date_picker = (DatePicker) findViewById(R.id.date_picker);
+        date_picker = findViewById(R.id.date_picker);
         Date time = Calendar.getInstance().getTime();
         date_picker.setMaxDate(time.getTime());
 
-        //mDbHelper = DbHelper.getInstance(this);
         handler = new Handler();
         httpHelper = new HttpHelper();
     }
@@ -72,12 +70,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.register_register) {
-
-            /*contact = new Contact(0, username.getText().toString(),
-                    firstName.getText().toString(),
-                    lastName.getText().toString());
-
-            mDbHelper.insertContact(contact);*/
             new Thread(new Runnable() {
                 public void run() {
                     JSONObject jsonObject = new JSONObject();

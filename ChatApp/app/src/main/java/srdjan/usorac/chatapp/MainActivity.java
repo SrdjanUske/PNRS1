@@ -20,14 +20,13 @@ import java.io.IOException;
 
 public class  MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnFocusChangeListener, TextWatcher {
 
+    public static final String LOGIN_URL = HttpHelper.BASE_URL + "/login";
+
     Button login_button, register_button;
     EditText username, password;
-    //private DbHelper mDbHelper;
-    private Contact[] contacts;
     SharedPreferences preferences;
     private Handler handler;
     private HttpHelper httpHelper;
-    public static String LOGIN_URL = HttpHelper.BASE_URL + "/login";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,15 +39,13 @@ public class  MainActivity extends AppCompatActivity implements View.OnClickList
         login_button.setOnClickListener(this);
         login_button.setEnabled(false);
 
-        username = (EditText) findViewById(R.id.username);
-        password = (EditText) findViewById(R.id.password);
+        username = findViewById(R.id.username);
+        password = findViewById(R.id.password);
 
         password.setOnFocusChangeListener(this);
         username.addTextChangedListener(this);
         password.addTextChangedListener(this);
 
-        /*mDbHelper = DbHelper.getInstance(this);
-        contacts = mDbHelper.readContacts();*/
         handler = new Handler();
         httpHelper = new HttpHelper();
     }
@@ -60,35 +57,6 @@ public class  MainActivity extends AppCompatActivity implements View.OnClickList
             startActivity(intent);
         }
         else if (view.getId() == R.id.login) {
-            /*boolean exist = false;
-
-            if (contacts == null) {
-
-                Toast.makeText(getApplicationContext(), "Username not recognized!", Toast.LENGTH_SHORT).show();
-                Toast.makeText(getApplicationContext(), "If you're not register, click REGISTER button!", Toast.LENGTH_SHORT).show();
-
-            } else {
-
-                for (int i = 0; i < contacts.length; i++) {
-                    if (contacts[i].getUserName().equals(username.getText().toString())) {
-                        exist = true;
-
-                        preferences = getApplicationContext().getSharedPreferences("MyPreferences", 0);
-                        SharedPreferences.Editor editor = preferences.edit();
-                        editor.putInt("senderID", contacts[i].getmID());
-                        editor.commit();
-
-                        Intent intent = new Intent(this, ContactsActivity.class);
-                        intent.putExtra("UserName", contacts[i].getUserName());
-                        startActivity(intent);
-                    }
-                }
-                if (!exist) {
-                    Toast.makeText(getApplicationContext(), "Username not recognized!", Toast.LENGTH_SHORT).show();
-                    Toast.makeText(getApplicationContext(), "If you're not register, click REGISTER button!", Toast.LENGTH_SHORT).show();
-                }
-            }*/
-
             new Thread(new Runnable() {
                 public void run() {
                     JSONObject jsonObject = new JSONObject();
@@ -116,7 +84,7 @@ public class  MainActivity extends AppCompatActivity implements View.OnClickList
                         else {
                             handler.post(new Runnable() {
                                 public void run() {
-                                    Toast.makeText(MainActivity.this, "ERROR " + success.responceCode + ": " + success.responceMessage, Toast.LENGTH_LONG).show();
+                                    Toast.makeText(MainActivity.this, "ERROR: username or password wrong!", Toast.LENGTH_LONG).show();
                                 }
                             });
                         }
