@@ -156,7 +156,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onResume() {
         super.onResume();
-        //getMessages();
+        getMessages();
     }
 
     public void getMessages() {

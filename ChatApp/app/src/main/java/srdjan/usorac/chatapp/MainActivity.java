@@ -51,6 +51,18 @@ public class  MainActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        startService(new Intent(this, NotificationsService.class));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopService(new Intent(this, NotificationsService.class));
+    }
+
+    @Override
     public void onClick(View view) {
         if (view.getId() == R.id.register) {
             Intent intent = new Intent(this, RegisterActivity.class);

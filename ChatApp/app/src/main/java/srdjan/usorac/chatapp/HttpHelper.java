@@ -59,6 +59,37 @@ public class HttpHelper {
         return responseCode == SUCCESS ? new JSONArray(jsonString) : null;
     }
 
+    /*HTTP getfromservice -> for notifications */
+    public boolean getFromServiceFromURL(String urlString, String sessionID) throws IOException {
+        HttpURLConnection urlConnection = null;
+        java.net.URL url = new URL(urlString);
+        urlConnection = (HttpURLConnection) url.openConnection();
+        urlConnection.setRequestMethod("GET");
+        urlConnection.setRequestProperty("Accept", "application/json");
+        urlConnection.setReadTimeout(10000 /* milliseconds */);
+        urlConnection.setConnectTimeout(15000 /* milliseconds */);
+        urlConnection.setRequestProperty(SESSION_ID, sessionID);
+
+        try {
+            urlConnection.connect();
+        } catch (IOException e) {
+            return false;
+        }
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null) {
+            sb.append(line + "\n");
+        }
+        br.close();
+
+        int responseCode = urlConnection.getResponseCode();
+        urlConnection.disconnect();
+
+        return responseCode == SUCCESS;
+    }
+
     /*HTTP post (without sessionID) -> for register and login */
     public Responce postJSONObjectFromURL(String urlString, JSONObject jsonObject) throws IOException {
         HttpURLConnection urlConnection = null;

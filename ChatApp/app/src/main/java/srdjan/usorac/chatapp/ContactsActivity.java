@@ -97,7 +97,7 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onResume() {
         super.onResume();
-        //getContacts();
+        getContacts();
     }
 
     public void getContacts() {
