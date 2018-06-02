@@ -1,5 +1,7 @@
 package srdjan.usorac.chatapplication;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,8 +34,8 @@ public class HttpHelper {
         urlConnection = (HttpURLConnection) url.openConnection();
         urlConnection.setRequestMethod("GET");
         urlConnection.setRequestProperty("Accept", "application/json");
-        urlConnection.setReadTimeout(10000 /* milliseconds */);
-        urlConnection.setConnectTimeout(15000 /* milliseconds */);
+        urlConnection.setReadTimeout(10000);
+        urlConnection.setConnectTimeout(15000);
         urlConnection.setRequestProperty(SESSION_ID, sessionID);
 
         try {
@@ -65,8 +67,8 @@ public class HttpHelper {
         urlConnection = (HttpURLConnection) url.openConnection();
         urlConnection.setRequestMethod("GET");
         urlConnection.setRequestProperty("Accept", "application/json");
-        urlConnection.setReadTimeout(10000 /* milliseconds */);
-        urlConnection.setConnectTimeout(15000 /* milliseconds */);
+        urlConnection.setReadTimeout(10000);
+        urlConnection.setConnectTimeout(15000);
         urlConnection.setRequestProperty(SESSION_ID, sessionID);
 
         try {
@@ -81,12 +83,14 @@ public class HttpHelper {
         while ((line = br.readLine()) != null) {
             sb.append(line + "\n");
         }
+
         br.close();
 
-        int responseCode = urlConnection.getResponseCode();
+        boolean response = Boolean.valueOf(sb.toString());
+        Log.d("TAG", String.valueOf(response));
         urlConnection.disconnect();
 
-        return responseCode == SUCCESS;
+        return response;
     }
 
     /*HTTP post (without sessionID) -> for register and login */

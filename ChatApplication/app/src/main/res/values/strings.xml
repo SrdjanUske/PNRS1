@@ -28,7 +28,8 @@
     <string name="ruzica_mitric">Ruzica Mitric</string>
     <string name="contact_list">contact_list</string>
     <string name="refresh">REFRESH</string>
-    <string name="new_message">You have a new message!</string>
+    <string name="new_message">NEW MESSAGE!</string>
+    <string name="no_new_messages">No new messages!</string>
     <string-array name="spinner">
         <item>male</item>
         <item>female</item>

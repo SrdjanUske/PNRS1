@@ -1,10 +1,18 @@
 package srdjan.usorac.chatapplication;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Handler;
+import android.os.IBinder;
+import android.os.RemoteException;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -17,10 +25,14 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-public class ContactsActivity extends AppCompatActivity implements View.OnClickListener {
+public class ContactsActivity extends AppCompatActivity implements View.OnClickListener, ServiceConnection {
 
     public static final String CONTACTS_URL = HttpHelper.BASE_URL + "/contacts";
     public static final String LOGOUT_URL = HttpHelper.BASE_URL + "/logout";
+    public static final String GET_NEW_MESSAGE_URL = HttpHelper.BASE_URL + "/getfromservice";
+    public static final int UNIQUE_ID_NEW_MESSAGE = 1234;
+    public static final int UNIQUE_ID_NO_NEW_MESSAGES = 123456;
+
 
     public SharedPreferences preferences;
     private Button logout, refresh;
@@ -31,6 +43,7 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
     private Contact[] contacts;
     private String username;
     private String sessionID;
+    NotificationBinder mService = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +68,8 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
         preferences = getApplicationContext().getSharedPreferences("MyPreferences", 0);
         sessionID = preferences.getString("sessionID", null);
         username = preferences.getString("logged_in", null);
+
+        bindService(new Intent(ContactsActivity.this, NotificationService.class), this, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -152,8 +167,65 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    public void onServiceConnected(ComponentName name, IBinder service) {
+        mService = (NotificationBinder) NotificationBinder.Stub.asInterface(service);
+        try {
+            mService.setCallback(new Callback());
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
 
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+
+    }
+
+    private class Callback extends INotificationCallback.Stub {
+
+        @Override
+        public void onCallbackCall() throws RemoteException {
+            final HttpHelper httpHelper = new HttpHelper();
+            final Handler handler = new Handler();
+
+            final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), null)
+                    .setSmallIcon(R.drawable.notification)
+                    .setContentTitle(getText(R.string.app_name))
+                    .setContentText(getString(R.string.new_message))
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+            final NotificationCompat.Builder NotmBuilder = new NotificationCompat.Builder(getApplicationContext(), null)
+                    .setSmallIcon(R.drawable.notification)
+                    .setContentTitle(getText(R.string.app_name))
+                    .setContentText(getString(R.string.no_new_messages))
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+            final NotificationManagerCompat managerCompat = NotificationManagerCompat.from(getApplicationContext());
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    Log.d("TAG", "Hello from Callback");
+                    try {
+                        final boolean response = httpHelper.getFromServiceFromURL(GET_NEW_MESSAGE_URL, sessionID);
+
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (response) {
+                                    managerCompat.notify(UNIQUE_ID_NEW_MESSAGE, mBuilder.build());
+                                }
+                                else {
+                                    managerCompat.notify(UNIQUE_ID_NO_NEW_MESSAGES, NotmBuilder.build());
+                                }
+                            }
+                        });
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        }
     }
 }

@@ -21,6 +21,11 @@
         <activity android:name=".ContactsActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MessageActivity"></activity>
+
+        <service
+            android:name=".NotificationService"
+            android:enabled="true"
+            android:exported="false" />
     </application>
 
 </manifest>
