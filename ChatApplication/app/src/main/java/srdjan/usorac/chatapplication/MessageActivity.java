@@ -43,10 +43,14 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
     private Handler handler;
     private HttpHelper httpHelper;
 
+    Encryption encryption;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
+
+        encryption = new Encryption();
 
         name = findViewById(R.id.message_contact);
 
@@ -115,7 +119,9 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
                     JSONObject jsonObject = new JSONObject();
                     try {
                         jsonObject.put(HttpHelper.RECEIVER, receiver);
-                        jsonObject.put(HttpHelper.DATA, message.getText().toString());
+                        //jsonObject.put(HttpHelper.DATA, message.getText().toString());
+
+                        jsonObject.put(HttpHelper.DATA, encryption.encrypt(message.getText().toString(), Encryption.KEY));
 
                         final HttpHelper.Responce success = httpHelper.postJSONObjectFromURL(SEND_URL, jsonObject, sessionID);
 

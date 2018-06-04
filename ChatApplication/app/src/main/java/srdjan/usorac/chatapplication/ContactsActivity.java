@@ -31,8 +31,6 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
     public static final String LOGOUT_URL = HttpHelper.BASE_URL + "/logout";
     public static final String GET_NEW_MESSAGE_URL = HttpHelper.BASE_URL + "/getfromservice";
     public static final int UNIQUE_ID_NEW_MESSAGE = 1234;
-    public static final int UNIQUE_ID_NO_NEW_MESSAGES = 123456;
-
 
     public SharedPreferences preferences;
     private Button logout, refresh;
@@ -194,12 +192,6 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
                     .setContentText(getString(R.string.new_message))
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
-            final NotificationCompat.Builder NotmBuilder = new NotificationCompat.Builder(getApplicationContext(), null)
-                    .setSmallIcon(R.drawable.notification)
-                    .setContentTitle(getText(R.string.app_name))
-                    .setContentText(getString(R.string.no_new_messages))
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
             final NotificationManagerCompat managerCompat = NotificationManagerCompat.from(getApplicationContext());
 
             new Thread(new Runnable() {
@@ -213,11 +205,9 @@ public class ContactsActivity extends AppCompatActivity implements View.OnClickL
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
+                                Log.d("TAG", "New message -> " + response);
                                 if (response) {
                                     managerCompat.notify(UNIQUE_ID_NEW_MESSAGE, mBuilder.build());
-                                }
-                                else {
-                                    managerCompat.notify(UNIQUE_ID_NO_NEW_MESSAGES, NotmBuilder.build());
                                 }
                             }
                         });
