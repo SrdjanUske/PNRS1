@@ -20,12 +20,14 @@
             android:id="@+id/refresh_messages"
             android:layout_width="139dp"
             android:layout_height="wrap_content"
+            android:layout_below="@id/message_contact"
             android:text="@string/refresh"/>
 
         <Button
             android:id="@+id/logout_from_chat"
             android:layout_width="139dp"
             android:layout_height="wrap_content"
+            android:layout_below="@id/message_contact"
             android:layout_alignParentRight="true"
             android:text="@string/log_out" />
 
